@@ -68,7 +68,8 @@
         }
         @keyframes shine { to { background-position-x: -200%; } }
 
-        .hero-wrapper { padding: 0 5%; margin: 160px auto 60px auto; max-width: 1400px; min-height: 65vh; background-color: #f0f0f0; }
+        /* 🚀 已將背景改為透明 */
+        .hero-wrapper { padding: 0 5%; margin: 160px auto 60px auto; max-width: 1400px; min-height: 65vh; background-color: transparent; }
         .hero-banner { position: relative; width: 100%; height: 65vh; min-height: 450px; display: block; overflow: hidden; }
         
         .hero-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s, opacity 0.5s ease; opacity: 0; }
@@ -96,7 +97,8 @@
         .featured-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 40px; }
         .article-card { display: flex; flex-direction: column; text-align: left !important; }
         
-        .card-img-wrapper { position: relative; width: 100%; aspect-ratio: 4/3; margin-bottom: 15px; overflow: hidden; background-color: #f0f0f0; }
+        /* 🚀 已將圖片外框背景改為透明 */
+        .card-img-wrapper { position: relative; width: 100%; aspect-ratio: 4/3; margin-bottom: 15px; overflow: hidden; background-color: transparent; }
         .card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s, opacity 0.5s ease; opacity: 0; }
         .card-img.loaded { opacity: 1; }
         .article-card:hover .card-img { transform: scale(1.05); }
@@ -171,8 +173,6 @@
 
         function getSmartImageUrl(rawUrl, width = null, isHero = false) {
             if (!rawUrl) return '';
-            
-            // 🚀 關鍵修復：解決陣列格式導致的崩潰
             if (Array.isArray(rawUrl)) {
                 rawUrl = rawUrl[0];
             }
