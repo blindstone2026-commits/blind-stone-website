@@ -1,0 +1,49 @@
+backend:
+  name: github
+  repo: jceavier-77/blind-stone-website
+  branch: main
+
+publish_mode: simple
+show_published_group: false
+
+# 圖片將存放在 GitHub 儲存庫的 images 資料夾
+media_folder: "images"
+public_folder: "/images"
+
+slug:
+  encoding: "ascii"
+  clean_accents: true
+  sanitize_replacement: "-"
+
+collections:
+  - name: "articles"
+    label: "文章"
+    folder: "content/articles"
+    create: true
+    summary: "【{{main_category}}】 {{title}}"
+    fields:
+      - {label: "文章標題", name: "title", widget: "string"}
+      - label: "發布日期"
+        name: "date"
+        widget: "datetime"
+        date_format: "YYYY-MM-DD"
+        time_format: false
+        format: "YYYY-MM-DD"
+      - {label: "封面大圖", name: "thumbnail", widget: "image"}
+      - label: "大分類"
+        name: "main_category"
+        widget: "select"
+        multiple: true
+        options: ["What's On", "The Creatives", "Spaces", "The Guide"]
+      - label: "小分類"
+        name: "sub_category"
+        widget: "select"
+        multiple: true
+        options: ["Event", "News", "Special", "Master", "New Stars", "Editor Special", "Gallery", "Art Cafe", "Art Special", "無"]
+      - label: "文章內文"
+        name: "body"
+        widget: "markdown"
+        minimal: false 
+        buttons: ["bold", "italic", "code", "link", "heading-one", "heading-two", "heading-three", "quote", "bulleted-list", "numbered-list"]
+        editor_components: ["image"]
+        modes: ["rich_text"]
