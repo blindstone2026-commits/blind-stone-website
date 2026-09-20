@@ -3,12 +3,16 @@ backend:
   repo: jceavier-77/blind-stone-website
   branch: main
 
+# 🚀 全新圖片極速引擎 (Cloudinary)
+media_library:
+  name: cloudinary
+  config:
+    cloud_name: 'avwvv663'
+    api_key: '554978162891374'
+    multiple: true
+
 publish_mode: simple
 show_published_group: false
-
-# 圖片將存放在 GitHub 儲存庫的 images 資料夾
-media_folder: "images"
-public_folder: "/images"
 
 slug:
   encoding: "ascii"
