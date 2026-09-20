@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blind Stone | 藝術與人文</title>
+    
+    <link rel="icon" type="image/png" href="/images/favicon.png?v=2">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://res.cloudinary.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --font-en: 'Montserrat', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            --font-zh: 'Noto Sans TC', "PingFang TC", "Microsoft JhengHei", sans-serif; 
+            --brand-gradient: linear-gradient(-45deg, #C39F9F, #A6C4CC, #C5BEDF, #D8C79B); 
+        }
+        body { margin: 0; font-family: var(--font-en); background: #fff; color: #000; overflow-x: hidden; }
+        * { box-sizing: border-box; }
+        a { text-decoration: none !important; color: inherit; outline: none !important; }
+
+        /* --- 導覽列 --- */
+        .header-nav { position: fixed; top: 0; width: 100%; background: #fff; z-index: 1000; border-bottom: 1px solid #eee; display: flex; flex-direction: column; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; position: relative; }
+        .logo-group { display: flex; align-items: center; gap: 15px; font-weight: 600; font-size: 1.8rem; letter-spacing: 1px; }
+        .logo-group img { height: 50px; }
+        .logo-group a { color: #000 !important; font-weight: 600 !important; letter-spacing: 1px; text-transform: uppercase; }
+        .header-bottom { display: flex; justify-content: center; padding-bottom: 15px; }
+        .nav-menu { display: flex; gap: 35px; list-style: none; margin: 0; padding: 0; align-items: center; }
+        .nav-item { position: relative; display: flex; justify-content: center; }
+        .nav-item > a { font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: #000 !important; cursor: default; padding: 5px 0; }
+        
+        .dropdown-menu { 
+            position: absolute; top: 100%; left: 50%; transform: translateX(-50%); 
+            margin-top: 5px; background: #fff; box-shadow: 0 15px 30px rgba(0,0,0,0.1); 
+            list-style: none; padding: 10px 0; min-width: 180px; 
+            text-align: center; opacity: 0; visibility: hidden; transition: all 0.3s; 
+            border-top: 3px solid #000; z-index: 100;
+        }
+        .nav-item:hover .dropdown-menu { opacity: 1; visibility: visible; }
+        .dropdown-menu a { display: block; padding: 12px 25px; font-size: 13px; font-weight: 500; cursor: pointer; color: #000 !important; letter-spacing: 1px; }
+        .dropdown-menu a:hover { background: var(--brand-gradient); color: #fff !important; }
+
+        .hamburger-icon { display: none; font-size: 2rem; cursor: pointer; position: absolute; right: 5%; top: 18px; z-index: 1001; }
+        .mobile-menu-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #ffffff; z-index: 2000; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1); opacity: 0; padding-top: 80px; overflow-y: auto; }
+        .mobile-menu-overlay.active { transform: translateX(0); opacity: 1; }
+        .mobile-links { list-style: none; text-align: center; display: flex; flex-direction: column; gap: 35px; padding: 0; margin: 0; padding-bottom: 50px; }
+        .mobile-nav-title { font-family: var(--font-en); font-size: 1.3rem; font-weight: 900; color: #000; letter-spacing: 2px; text-transform: uppercase; cursor: default; margin-bottom: 10px; }
+        a.mobile-nav-title { cursor: pointer; } 
+        .mobile-sub-links { display: flex; flex-direction: column; gap: 15px; }
+        .mobile-sub-links a { font-family: var(--font-en); font-size: 0.95rem; font-weight: 600; color: #666; text-decoration: none; letter-spacing: 1px; text-transform: uppercase; }
+        .mobile-sub-links a:hover { color: #000; }
+        .close-btn { position: absolute; top: 20px; right: 5%; font-size: 2.5rem; cursor: pointer; font-family: sans-serif; font-weight: 300; }
+
+        /* --- 骨架屏載入動畫 --- */
+        .skeleton-bg { background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%); background-size: 200% 100%; animation: 1.5s shine linear infinite; border-radius: 4px; }
+        @keyframes shine { to { background-position-x: -200%; } }
+
+        /* --- 文章 Banner 區塊 --- */
+        .article-layout-container { max-width: 1200px; margin: 160px auto 80px auto; padding: 0 5%; display: flex; flex-direction: column; align-items: center; min-height: 80vh; }
+        .article-hero-section { display: flex; align-items: center; width: 100%; margin-bottom: 60px; position: relative; }
+        
+        .hero-info-box { flex: 0 0 42%; background: var(--brand-gradient); padding: 30px; min-height: 350px; display: flex; flex-direction: column; justify-content: space-between; z-index: 2; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+        /* 🚀 移除圖片區塊灰底 */
+        .hero-image-box { flex: 0 0 68%; margin-left: -10%; height: 550px; z-index: 1; background-color: transparent; }
+        
+        /* 首圖優雅淡入 */
+        .hero-image-box img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.5s ease; }
+        .hero-image-box img.loaded { opacity: 1; }
+
+        .article-title { font-family: var(--font-zh); font-size: 1.8rem; font-weight: 900; line-height: 1.4; color: #ffffff; text-align: left !important; margin: 0 0 15px 0; text-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .article-tags-container { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+        .article-tag { background: #fff; color: #000; padding: 4px 12px; font-size: 0.75rem; font-weight: 900; letter-spacing: 2px; display: inline-block; text-transform: uppercase; }
+        .article-meta { font-family: var(--font-en); font-size: 0.95rem; color: #ffffff; font-weight: 600; letter-spacing: 1px; text-align: left !important; }
+
+        /* ✨ 完美的專業媒體級文字排版 */
+        .article-content { 
+            max-width: 760px;
+            width: 100%; 
+            margin: 0 auto;
+            font-family: var(--font-zh); 
+            font-size: 1.15rem; 
+            line-height: 1.85; 
+            color: #2b2b2b; 
+            letter-spacing: 0.02em; 
+            text-align: justify; 
+            text-justify: inter-ideograph; 
+            word-break: break-word; 
+            overflow-wrap: break-word;
+        }
+        
+        .article-content p, .article-content li { margin-bottom: 2em; }
+        
+        .article-content h1, .article-content h2, .article-content h3 { 
+            text-align: left; 
+            font-weight: 900; color: #000; line-height: 1.4; margin: 2em 0 1em 0; 
+        }
+        .article-content h2 { font-size: 1.5rem; border-left: 4px solid #C39F9F; padding-left: 15px; }
+        
+        /* 內文圖片設定預設底色與淡入，防止載入時版面跳動 */
+        .article-content img, .content-img { 
+            max-width: 100%; height: auto; margin: 40px 0; display: block; border-radius: 4px; 
+            background-color: transparent; 
+            opacity: 0; transition: opacity 0.5s ease;
+        }
+        .article-content img.loaded, .content-img.loaded { opacity: 1; }
+
+        @media (max-width: 1100px) { 
+            .header-bottom { display: none; } 
+            .hamburger-icon { display: block; } 
+        }
+        
+        @media (max-width: 900px) { 
+            .article-hero-section { flex-direction: column; margin-bottom: 40px; } 
+            .hero-image-box { width: 100%; margin-left: 0; height: 350px; } 
+            .hero-info-box { width: 100%; min-height: auto; margin-top: -20px; } 
+        }
+
+        /* 💡 手機版終極解法：強制靠左對齊！ */
+        @media (max-width: 768px) {
+            .article-content { font-size: 1.05rem; line-height: 1.75; }
+            .article-content p, .article-content li { text-align: left !important; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header-nav">
+        <div class="header-top">
+            <!-- 🚀 品牌名稱更新為 Blind Stone -->
+            <div class="logo-group"><img src="/images/logo.png" alt="Logo" onerror="this.style.display='none'"> <a href="/">Blind Stone</a></div>
+            <div class="hamburger-icon" onclick="toggleMobileMenu()">☰</div>
+        </div>
+        <div class="header-bottom">
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="javascript:void(0);">What's On</a><ul class="dropdown-menu"><li><a href="/category.html?sub=Event">Event</a></li><li><a href="/category.html?sub=News">News</a></li><li><a href="/category.html?sub=Special">Special</a></li></ul></li>
+                <li class="nav-item"><a href="javascript:void(0);">The Creatives</a><ul class="dropdown-menu"><li><a href="/category.html?sub=Master">Master</a></li><li><a href="/category.html?sub=New Stars">New Stars</a></li><li><a href="/category.html?sub=Editor Special">Editor Special</a></li></ul></li>
+                <li class="nav-item"><a href="javascript:void(0);">Spaces</a><ul class="dropdown-menu"><li><a href="/category.html?sub=Gallery">Gallery</a></li><li><a href="/category.html?sub=Art Cafe">Art Cafe</a></li><li><a href="/category.html?sub=Art Special">Art Special</a></li></ul></li>
+                <li class="nav-item"><a href="/category.html?main=The Guide" style="cursor:pointer;">The Guide</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="mobile-menu-overlay" id="mobileMenu">
+        <div class="close-btn" onclick="toggleMobileMenu()">✕</div>
+        <ul class="mobile-links">
+            <li><div class="mobile-nav-title">WHAT'S ON</div><div class="mobile-sub-links"><a href="/category.html?sub=Event" onclick="toggleMobileMenu()">Event</a><a href="/category.html?sub=News" onclick="toggleMobileMenu()">News</a><a href="/category.html?sub=Special" onclick="toggleMobileMenu()">Special</a></div></li>
+            <li><div class="mobile-nav-title">THE CREATIVES</div><div class="mobile-sub-links"><a href="/category.html?sub=Master" onclick="toggleMobileMenu()">Master</a><a href="/category.html?sub=New Stars" onclick="toggleMobileMenu()">New Stars</a><a href="/category.html?sub=Editor Special" onclick="toggleMobileMenu()">Editor Special</a></div></li>
+            <li><div class="mobile-nav-title">SPACES</div><div class="mobile-sub-links"><a href="/category.html?sub=Gallery" onclick="toggleMobileMenu()">Gallery</a><a href="/category.html?sub=Art Cafe" onclick="toggleMobileMenu()">Art Cafe</a><a href="/category.html?sub=Art Special" onclick="toggleMobileMenu()">Art Special</a></div></li>
+            <li><a href="/category.html?main=The Guide" class="mobile-nav-title" onclick="toggleMobileMenu()">THE GUIDE</a></li>
+        </ul>
+    </div>
+
+    <div id="articleRenderArea" class="article-layout-container">
+        <div class="article-hero-section">
+            <div class="hero-info-box skeleton-bg" style="min-height: 350px;"></div>
+            <div class="hero-image-box skeleton-bg"></div>
+        </div>
+        <div id="contentTarget" class="article-content" style="width: 100%; margin-top: 20px; opacity: 0.5;">
+            <div class="skeleton-bg" style="height: 20px; margin-bottom: 20px; width: 100%; border-radius: 4px;"></div>
+            <div class="skeleton-bg" style="height: 20px; margin-bottom: 20px; width: 100%; border-radius: 4px;"></div>
+            <div class="skeleton-bg" style="height: 20px; margin-bottom: 40px; width: 70%; border-radius: 4px;"></div>
+            <div class="skeleton-bg" style="height: 20px; margin-bottom: 20px; width: 100%; border-radius: 4px;"></div>
+            <div class="skeleton-bg" style="height: 20px; margin-bottom: 20px; width: 80%; border-radius: 4px;"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
+    <script>
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
+        }
+
+        // ✨ 萬用圖片處理函數 (加入陣列防呆與品牌更新)
+        function getSmartImageUrl(rawUrl, width = null, isHero = false) {
+            if (!rawUrl) return '';
+            
+            // 🚀 關鍵修復：解決陣列格式導致的崩潰
+            if (Array.isArray(rawUrl)) {
+                rawUrl = rawUrl[0];
+            }
+            rawUrl = String(rawUrl);
+
+            const quality = isHero ? 'q_auto:best' : 'q_auto:good';
+            const transform = width ? `c_limit,w_${width},f_auto,${quality},dpr_auto` : `f_auto,${quality},dpr_auto`;
+            
+            if (rawUrl.startsWith('/images/')) {
+                const safePath = encodeURI(rawUrl); 
+                return `https://res.cloudinary.com/avwvv663/image/fetch/${transform}/https://blind-stone.com${safePath}`;
+            }
+            if (rawUrl.includes('res.cloudinary.com')) {
+                return rawUrl.replace('/upload/', `/upload/${transform}/`);
+            }
+            return rawUrl;
+        }
+
+        async function loadSingleArticle() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const articleId = urlParams.get('id');
+            const renderArea = document.getElementById('articleRenderArea');
+            if (!articleId) return;
+
+            let isHeroRendered = false;
+
+            try {
+                // 🚀 Session Key 統一更新為 blindstone_articles
+                const cachedData = sessionStorage.getItem('blindstone_articles');
+                if (cachedData) {
+                    try {
+                        const allArticles = JSON.parse(cachedData);
+                        const quickInfo = allArticles.find(a => a.id === articleId);
+                        
+                        if (quickInfo) {
+                            document.title = `${quickInfo.title} | Blind Stone`;
+                            const heroImgUrl = getSmartImageUrl(quickInfo.thumbnail, 1600, true);
+                            
+                            renderArea.innerHTML = `
+                                <div class="article-hero-section">
+                                    <div class="hero-info-box">
+                                        <div class="info-top"><h1 class="article-title">${quickInfo.title}</h1></div>
+                                        <div class="info-bottom"><div class="article-tags-container"><div class="article-tag">${quickInfo.tag}</div></div><div class="article-meta">${quickInfo.dateStr}</div></div>
+                                    </div>
+                                    ${heroImgUrl ? `<div class="hero-image-box skeleton-bg"><img src="${heroImgUrl}" fetchpriority="high" decoding="sync" onload="this.classList.add('loaded'); this.parentElement.classList.remove('skeleton-bg')"></div>` : ''}
+                                </div>
+                                <div id="contentTarget" class="article-content" style="width: 100%; margin-top: 40px; opacity: 0.5;">
+                                    <div class="skeleton-bg" style="height: 20px; margin-bottom: 20px; width: 100%; border-radius: 4px;"></div>
+                                    <div class="skeleton-bg" style="height: 20px; margin-bottom: 20px; width: 100%; border-radius: 4px;"></div>
+                                    <div class="skeleton-bg" style="height: 20px; margin-bottom: 40px; width: 70%; border-radius: 4px;"></div>
+                                </div>
+                            `;
+                            isHeroRendered = true;
+                        }
+                    } catch (e) {}
+                }
+
+                // 等待解析套件載入
+                while (typeof jsyaml === 'undefined' || typeof marked === 'undefined') {
+                    await new Promise(resolve => setTimeout(resolve, 50));
+                }
+
+                // 去後台抓取包含 Markdown 的完整內容
+                const response = await fetch(`/api/articles?id=${articleId}`);
+                const data = await response.json();
+                const currentArticle = Array.isArray(data) ? (data.find(item => item.id === articleId) || data[0]) : data; 
+                
+                if (currentArticle) {
+                    const parts = currentArticle.rawContent.split('---');
+                    const frontMatter = jsyaml.load(parts[1]);
+                    const markdownContent = parts.slice(2).join('---');
+                    
+                    let htmlContent = marked.parse(markdownContent);
+                    
+                    htmlContent = htmlContent.replace(/<img /g, '<img loading="lazy" decoding="async" class="content-img" onload="this.classList.add(\'loaded\')" ');
+                    htmlContent = htmlContent.replace(/src="([^"]+)"/g, (match, path) => {
+                        if (path.includes('/images/')) {
+                            const absolutePath = path.startsWith('/') ? path : '/' + path;
+                            return `src="${getSmartImageUrl(absolutePath, 1200, false)}"`;
+                        }
+                        return match;
+                    });
+
+                    // 如果剛剛沒有快取，在這裡補畫封面版面
+                    if (!isHeroRendered) {
+                        const title = frontMatter.title || 'Untitled';
+                        let date = frontMatter.date ? new Date(frontMatter.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '';
+                        const tag = (frontMatter.sub_category || frontMatter.main_category || 'ARTICLE').toString().split(',')[0];
+                        const heroImgUrl = getSmartImageUrl(frontMatter.thumbnail, 1600, true);
+
+                        renderArea.innerHTML = `
+                            <div class="article-hero-section">
+                                <div class="hero-info-box">
+                                    <div class="info-top"><h1 class="article-title">${title}</h1></div>
+                                    <div class="info-bottom"><div class="article-tags-container"><div class="article-tag">${tag}</div></div><div class="article-meta">${date}</div></div>
+                                </div>
+                                ${heroImgUrl ? `<div class="hero-image-box skeleton-bg"><img src="${heroImgUrl}" fetchpriority="high" decoding="sync" onload="this.classList.add('loaded'); this.parentElement.classList.remove('skeleton-bg')"></div>` : ''}
+                            </div>
+                            <div id="contentTarget" class="article-content" style="opacity: 0;"></div>
+                        `;
+                        document.title = `${title} | Blind Stone`;
+                    }
+                    
+                    // 將解析好的 Markdown 內文取代掉骨架屏，並加入淡入動畫
+                    const contentTarget = document.getElementById('contentTarget');
+                    contentTarget.innerHTML = htmlContent;
+                    
+                    requestAnimationFrame(() => {
+                        contentTarget.style.transition = 'opacity 0.6s ease';
+                        contentTarget.style.opacity = '1';
+                    });
+                }
+            } catch (e) { console.error(e); }
+        }
+        document.addEventListener('DOMContentLoaded', loadSingleArticle);
+    </script>
+</body>
+</html>
