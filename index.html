@@ -171,8 +171,16 @@
 
         function getSmartImageUrl(rawUrl, width = null, isHero = false) {
             if (!rawUrl) return '';
+            
+            // 🚀 關鍵修復：解決陣列格式導致的崩潰
+            if (Array.isArray(rawUrl)) {
+                rawUrl = rawUrl[0];
+            }
+            rawUrl = String(rawUrl);
+
             const quality = isHero ? 'q_auto:best' : 'q_auto:good'; 
             const transform = width ? `c_limit,w_${width},f_auto,${quality},dpr_auto` : `f_auto,${quality},dpr_auto`;
+            
             if (rawUrl.startsWith('/images/')) {
                 const safePath = encodeURI(rawUrl); 
                 return `https://res.cloudinary.com/depofra3w/image/fetch/${transform}/https://blindstone.com${safePath}`;
