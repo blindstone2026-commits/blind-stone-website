@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blind Stone | 藝術與人文</title>
     
-    <link rel="icon" type="image/png" href="/images/favicon.png?v=2">
+    <!-- 🚀 縮圖 (Favicon) 已更換為您的 logo_jpg.jpg，並加上 v=3 強制更新 -->
+    <link rel="icon" type="image/jpeg" href="/images/logo_jpg.jpg?v=3">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://res.cloudinary.com">
@@ -62,7 +63,6 @@
         .article-hero-section { display: flex; align-items: center; width: 100%; margin-bottom: 60px; position: relative; }
         
         .hero-info-box { flex: 0 0 42%; background: var(--brand-gradient); padding: 30px; min-height: 350px; display: flex; flex-direction: column; justify-content: space-between; z-index: 2; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
-        /* 🚀 移除圖片區塊灰底 */
         .hero-image-box { flex: 0 0 68%; margin-left: -10%; height: 550px; z-index: 1; background-color: transparent; }
         
         /* 首圖優雅淡入 */
@@ -127,8 +127,8 @@
 <body>
     <header class="header-nav">
         <div class="header-top">
-            <!-- 🚀 品牌名稱更新為 Blind Stone -->
-            <div class="logo-group"><img src="/images/logo.png" alt="Logo" onerror="this.style.display='none'"> <a href="/">Blind Stone</a></div>
+            <!-- 🚀 Logo 圖片與文字排版已還原與 index.html 完全一致，並更換為 logo_jpg.jpg -->
+            <div class="logo-group"><img src="/images/logo_jpg.jpg" alt="Logo"><a href="/">Blind Stone</a></div>
             <div class="hamburger-icon" onclick="toggleMobileMenu()">☰</div>
         </div>
         <div class="header-bottom">
@@ -137,6 +137,7 @@
                 <li class="nav-item"><a href="javascript:void(0);">The Creatives</a><ul class="dropdown-menu"><li><a href="/category.html?sub=Master">Master</a></li><li><a href="/category.html?sub=New Stars">New Stars</a></li><li><a href="/category.html?sub=Editor Special">Editor Special</a></li></ul></li>
                 <li class="nav-item"><a href="javascript:void(0);">Spaces</a><ul class="dropdown-menu"><li><a href="/category.html?sub=Gallery">Gallery</a></li><li><a href="/category.html?sub=Art Cafe">Art Cafe</a></li><li><a href="/category.html?sub=Art Special">Art Special</a></li></ul></li>
                 <li class="nav-item"><a href="/category.html?main=The Guide" style="cursor:pointer;">The Guide</a></li>
+                <li class="nav-item"><a href="/award" target="_blank" rel="noopener noreferrer">Award</a><ul class="dropdown-menu"><li><a href="/about" target="_blank" rel="noopener noreferrer">About</a></li><li><a href="/the-jury" target="_blank" rel="noopener noreferrer">The Jury</a></li><li><a href="/submit" target="_blank" rel="noopener noreferrer">Submit</a></li></ul></li>
             </ul>
         </div>
     </header>
@@ -148,6 +149,7 @@
             <li><div class="mobile-nav-title">THE CREATIVES</div><div class="mobile-sub-links"><a href="/category.html?sub=Master" onclick="toggleMobileMenu()">Master</a><a href="/category.html?sub=New Stars" onclick="toggleMobileMenu()">New Stars</a><a href="/category.html?sub=Editor Special" onclick="toggleMobileMenu()">Editor Special</a></div></li>
             <li><div class="mobile-nav-title">SPACES</div><div class="mobile-sub-links"><a href="/category.html?sub=Gallery" onclick="toggleMobileMenu()">Gallery</a><a href="/category.html?sub=Art Cafe" onclick="toggleMobileMenu()">Art Cafe</a><a href="/category.html?sub=Art Special" onclick="toggleMobileMenu()">Art Special</a></div></li>
             <li><a href="/category.html?main=The Guide" class="mobile-nav-title" onclick="toggleMobileMenu()">THE GUIDE</a></li>
+            <li><a href="/award" class="mobile-nav-title" onclick="window.open(this.href, '_blank'); toggleMobileMenu(); return false;">AWARD</a><div class="mobile-sub-links"><a href="/about" onclick="window.open(this.href, '_blank'); toggleMobileMenu(); return false;">About</a><a href="/the-jury" onclick="window.open(this.href, '_blank'); toggleMobileMenu(); return false;">The Jury</a><a href="/submit" onclick="window.open(this.href, '_blank'); toggleMobileMenu(); return false;">Submit</a></div></li>
         </ul>
     </div>
 
@@ -172,11 +174,9 @@
             document.getElementById('mobileMenu').classList.toggle('active');
         }
 
-        // ✨ 萬用圖片處理函數 (加入陣列防呆與品牌更新)
         function getSmartImageUrl(rawUrl, width = null, isHero = false) {
             if (!rawUrl) return '';
             
-            // 🚀 關鍵修復：解決陣列格式導致的崩潰
             if (Array.isArray(rawUrl)) {
                 rawUrl = rawUrl[0];
             }
@@ -204,7 +204,6 @@
             let isHeroRendered = false;
 
             try {
-                // 🚀 Session Key 統一更新為 blindstone_articles
                 const cachedData = sessionStorage.getItem('blindstone_articles');
                 if (cachedData) {
                     try {
@@ -234,12 +233,10 @@
                     } catch (e) {}
                 }
 
-                // 等待解析套件載入
                 while (typeof jsyaml === 'undefined' || typeof marked === 'undefined') {
                     await new Promise(resolve => setTimeout(resolve, 50));
                 }
 
-                // 去後台抓取包含 Markdown 的完整內容
                 const response = await fetch(`/api/articles?id=${articleId}`);
                 const data = await response.json();
                 const currentArticle = Array.isArray(data) ? (data.find(item => item.id === articleId) || data[0]) : data; 
@@ -260,7 +257,6 @@
                         return match;
                     });
 
-                    // 如果剛剛沒有快取，在這裡補畫封面版面
                     if (!isHeroRendered) {
                         const title = frontMatter.title || 'Untitled';
                         let date = frontMatter.date ? new Date(frontMatter.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '';
@@ -280,7 +276,6 @@
                         document.title = `${title} | Blind Stone`;
                     }
                     
-                    // 將解析好的 Markdown 內文取代掉骨架屏，並加入淡入動畫
                     const contentTarget = document.getElementById('contentTarget');
                     contentTarget.innerHTML = htmlContent;
                     
